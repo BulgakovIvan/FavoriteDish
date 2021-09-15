@@ -1,4 +1,4 @@
-package com.firstproject.favdish.ui.notifications
+package com.firstproject.favdish.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
