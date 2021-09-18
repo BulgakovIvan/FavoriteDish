@@ -4,8 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.firstproject.favdish.R
 import com.firstproject.favdish.databinding.FragmentAllDishesBinding
@@ -14,7 +15,9 @@ import com.firstproject.favdish.viewmodels.HomeViewModel
 
 class AllDishesFragment : Fragment() {
 
-    private lateinit var homeViewModel: HomeViewModel
+    // TODO: 17.09.2021 view model
+    private val homeViewModel: HomeViewModel by viewModels()
+//    private lateinit var homeViewModel: HomeViewModel
     private var _binding: FragmentAllDishesBinding? = null
 
     // This property is only valid between onCreateView and
@@ -31,8 +34,10 @@ class AllDishesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
+        // TODO: 17.09.2021 del viewmodel provider???
+//        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+//        val homeViewModel by viewModels<HomeViewModel>()
+//        val homeViewModel: HomeViewModel by viewModels()
 
         _binding = FragmentAllDishesBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -41,6 +46,7 @@ class AllDishesFragment : Fragment() {
         homeViewModel.text.observe(viewLifecycleOwner, {
             textView.text = it
         })
+
         return root
     }
 
