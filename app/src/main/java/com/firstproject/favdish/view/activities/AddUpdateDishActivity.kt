@@ -1,6 +1,7 @@
 package com.firstproject.favdish.view.activities
 
 import android.Manifest
+import android.app.Activity
 import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -8,9 +9,13 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import com.firstproject.favdish.R
 import com.firstproject.favdish.databinding.ActivityAddUpdateDishBinding
 import com.firstproject.favdish.databinding.DialogCustomImageSelectionBinding
@@ -22,6 +27,21 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 
 class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityAddUpdateDishBinding
+
+    val startCameraXApp = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val intent = result.data
+            val uri = intent?.getStringExtra(IMAGE_URI)
+            Log.e(TAG, "Receive image: $uri")
+
+            uri.let {
+                binding.ivDishImage.setImageURI(Uri.parse(it))
+
+                binding.ivAddDishImage.setImageDrawable(
+                    ContextCompat.getDrawable(this, R.drawable.ic_vector_edit))
+            }
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddUpdateDishBinding.inflate(layoutInflater)
@@ -47,16 +67,15 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
         binding.tvCamera.setOnClickListener {
             Dexter.withContext(this).withPermissions(
                 Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//                Manifest.permission.WRITE_EXTERNAL_STORAGE, // work until API 28
                 Manifest.permission.CAMERA
             ).withListener(object : MultiplePermissionsListener{
                 override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
-                    if (report!!.areAllPermissionsGranted()) {
-                        Toast.makeText(
-                            this@AddUpdateDishActivity,
-                            "You have camera permission now",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                    report?.let {
+                        if (report.areAllPermissionsGranted()) {
+                            startCameraXApp.launch(
+                                Intent(this@AddUpdateDishActivity, CameraXApp::class.java))
+                        }
                     }
                 }
 
@@ -73,9 +92,10 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         binding.tvGallery.setOnClickListener {
+            // TODO: 18.09.2021 change to one premission
             Dexter.withContext(this).withPermissions(
                 Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                Manifest.permission.WRITE_EXTERNAL_STORAGE  // work until API 28
             ).withListener(object : MultiplePermissionsListener{
                 override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
                     if (report!!.areAllPermissionsGranted()) {
@@ -131,6 +151,11 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
                 }
             }
         }
+    }
+
+    companion object {
+        private const val TAG = "ups"
+        const val IMAGE_URI = "IMAGE_URI"
     }
 }
 
