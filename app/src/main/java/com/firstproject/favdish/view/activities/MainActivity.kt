@@ -1,5 +1,6 @@
 package com.firstproject.favdish.view.activities
 
+import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -32,5 +33,9 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        binding.fab.setOnClickListener {
+            startActivity(Intent(this, AddUpdateDishActivity::class.java))
+        }
     }
 }

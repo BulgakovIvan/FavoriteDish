@@ -22,8 +22,8 @@ import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import android.content.Intent
-
-
+import android.os.Handler
+import android.os.Looper
 
 
 class CameraXApp : AppCompatActivity() {
@@ -40,7 +40,12 @@ class CameraXApp : AppCompatActivity() {
 
         startCamera()
 
-        binding.cameraCaptureButton.setOnClickListener { takePhoto() }
+        binding.cameraCaptureButton.setOnClickListener {
+            binding.cameraMotionLayout.transitionToEnd()
+
+            Handler(Looper.getMainLooper())
+                .postDelayed({ takePhoto() }, 800)
+        }
 
         outputDirectory = getOutputDirectory()
         cameraExecutor = Executors.newSingleThreadExecutor()
