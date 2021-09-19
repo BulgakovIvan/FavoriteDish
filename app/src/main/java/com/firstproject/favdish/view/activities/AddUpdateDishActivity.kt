@@ -16,6 +16,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
 import com.firstproject.favdish.R
 import com.firstproject.favdish.databinding.ActivityAddUpdateDishBinding
 import com.firstproject.favdish.databinding.DialogCustomImageSelectionBinding
@@ -38,7 +39,10 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
             Log.e(TAG, "Receive image: $uri")
 
             uri.let {
-                binding.ivDishImage.setImageURI(Uri.parse(it))
+                Glide.with(this)
+                    .load(it)
+                    .centerCrop()
+                    .into(binding.ivDishImage)
 
                 binding.ivAddDishImage.setImageDrawable(
                     ContextCompat.getDrawable(this, R.drawable.ic_vector_edit))
@@ -49,7 +53,10 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
     val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
             Log.e(TAG, "getContent: $it")
-            binding.ivDishImage.setImageURI(it)
+            Glide.with(this)
+                .load(it)
+                .centerCrop()
+                .into(binding.ivDishImage)
 
             binding.ivAddDishImage.setImageDrawable(
                 ContextCompat.getDrawable(this, R.drawable.ic_vector_edit))
