@@ -1,6 +1,8 @@
 package com.firstproject.favdish.view.activities
 
 import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import android.icu.text.SimpleDateFormat
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -24,6 +26,7 @@ import java.util.concurrent.Executors
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import com.firstproject.favdish.utils.*
 
 
 class CameraXApp : AppCompatActivity() {
@@ -44,10 +47,10 @@ class CameraXApp : AppCompatActivity() {
             binding.cameraMotionLayout.transitionToEnd()
 
             Handler(Looper.getMainLooper())
-                .postDelayed({ takePhoto() }, 800)
+                .postDelayed({ takePhoto() }, TAKE_PHOTO_DELAY)
         }
 
-        outputDirectory = getOutputDirectory()
+        outputDirectory = getInternalStorage(this, IMAGE_DIRECTORY)
         cameraExecutor = Executors.newSingleThreadExecutor()
 
     }
@@ -92,7 +95,8 @@ class CameraXApp : AppCompatActivity() {
         // Create time-stamped output file to hold the image
         val photoFile = File(
             outputDirectory,
-            SimpleDateFormat(FILENAME_FORMAT, Locale.getDefault()
+            SimpleDateFormat(
+                IMAGE_FILENAME_FORMAT, Locale.getDefault()
             ).format(System.currentTimeMillis()) + ".jpg")
 
         // Create output options object which contains file + metadata
@@ -120,20 +124,15 @@ class CameraXApp : AppCompatActivity() {
             })
     }
 
-    private fun getOutputDirectory(): File {
-        val mediaDir = externalMediaDirs.firstOrNull()?.let {
-            File(it, resources.getString(R.string.app_name)).apply { mkdirs() } }
-        return if (mediaDir != null && mediaDir.exists())
-            mediaDir else filesDir
-    }
+//    private fun getOutputDirectory(): File {
+//        val mediaDir = externalMediaDirs.firstOrNull()?.let {
+//            File(it, resources.getString(R.string.app_name)).apply { mkdirs() } }
+//        return if (mediaDir != null && mediaDir.exists())
+//            mediaDir else filesDir
+//    }
 
     override fun onDestroy() {
         super.onDestroy()
         cameraExecutor.shutdown()
-    }
-
-    companion object {
-        private const val TAG = "ups"
-        private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
     }
 }

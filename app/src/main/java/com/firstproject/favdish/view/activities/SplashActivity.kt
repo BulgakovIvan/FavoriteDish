@@ -12,6 +12,8 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import com.firstproject.favdish.R
 import com.firstproject.favdish.databinding.ActivitySplashBinding
+import com.firstproject.favdish.utils.MAIN_ACTIVITY_DELAY
+import com.firstproject.favdish.utils.SPLASH_ANIMATION_DURATION
 
 class SplashActivity : AppCompatActivity() {
 
@@ -31,7 +33,7 @@ class SplashActivity : AppCompatActivity() {
         }
 
         val splashAnimation = AnimationUtils.loadAnimation(this, R.anim.anim_splash)
-        splashBinding.tvAppName.animation = splashAnimation
+        splashAnimation.duration = SPLASH_ANIMATION_DURATION
 
         splashAnimation.setAnimationListener(object : Animation.AnimationListener{
             override fun onAnimationStart(animation: Animation?) {}
@@ -42,7 +44,7 @@ class SplashActivity : AppCompatActivity() {
                         startActivity(Intent(this@SplashActivity, MainActivity::class.java))
                         finish()
                     },
-                    1000
+                    MAIN_ACTIVITY_DELAY
                 )
             }
 
@@ -50,5 +52,6 @@ class SplashActivity : AppCompatActivity() {
 
         })
 
+        splashBinding.tvAppName.animation = splashAnimation
     }
 }
