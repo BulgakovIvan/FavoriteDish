@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.Activity
 import android.app.Dialog
 import android.content.ActivityNotFoundException
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
@@ -13,19 +12,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
-import androidx.fragment.app.DialogFragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -35,11 +28,9 @@ import com.bumptech.glide.request.target.Target
 import com.firstproject.favdish.R
 import com.firstproject.favdish.databinding.ActivityAddUpdateDishBinding
 import com.firstproject.favdish.databinding.DialogCustomImageSelectionBinding
-import com.firstproject.favdish.databinding.DialogCustomListBinding
 import com.firstproject.favdish.utils.TAG
 import com.firstproject.favdish.utils.dishCategories
 import com.firstproject.favdish.utils.saveImage
-import com.firstproject.favdish.view.adapters.DialogListItemAdapter
 import com.firstproject.favdish.view.dialogs.DialogCustomList
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
@@ -74,6 +65,7 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
     val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
             Log.e(TAG, "Image from gallery: $it")
+
             Glide.with(this)
                 .load(it)
                 .centerCrop()

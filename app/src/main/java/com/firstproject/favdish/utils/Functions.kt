@@ -3,18 +3,16 @@ package com.firstproject.favdish.utils
 import android.content.Context
 import android.content.ContextWrapper
 import java.io.File
-import android.widget.Toast
-
-import com.firstproject.favdish.view.activities.MainActivity
-
 import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.icu.text.SimpleDateFormat
+import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
 import android.util.Log
-import com.firstproject.favdish.view.activities.CameraXApp
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
-import java.lang.Exception
 import java.util.*
 
 
@@ -42,4 +40,14 @@ fun saveImage(context: Context, bitmap: Bitmap, directory: String = IMAGE_DIRECT
     } catch (e: IOException) {
         e.printStackTrace()
     }
+}
+
+fun saveImage(context: Context, uri: Uri, directory: String = IMAGE_DIRECTORY) {
+    val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.contentResolver, uri))
+    } else {
+        MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+    }
+
+    saveImage(context, bitmap, directory)
 }

@@ -1,23 +1,16 @@
 package com.firstproject.favdish.view.activities
 
-import android.app.Activity
-import android.content.Context
-import android.content.ContextWrapper
 import android.icu.text.SimpleDateFormat
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.Toast
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
-import com.firstproject.favdish.R
 import com.firstproject.favdish.databinding.ActivityCameraXappBinding
 import java.io.File
 import java.util.*
@@ -27,6 +20,7 @@ import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import com.firstproject.favdish.utils.*
+import com.firstproject.favdish.view.fragments.AddUpdateFragment
 
 
 class CameraXApp : AppCompatActivity() {
@@ -58,7 +52,7 @@ class CameraXApp : AppCompatActivity() {
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
-        cameraProviderFuture.addListener(Runnable {
+        cameraProviderFuture.addListener({
             // Used to bind the lifecycle of cameras to the lifecycle owner
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
 
@@ -117,7 +111,7 @@ class CameraXApp : AppCompatActivity() {
                     Log.e(TAG, msg)
 
                     val data = Intent()
-                    data.putExtra(AddUpdateDishActivity.IMAGE_URI, savedUri.toString())
+                    data.putExtra(AddUpdateFragment.IMAGE_URI, savedUri.toString())
                     setResult(RESULT_OK, data)
                     finish()
                 }
