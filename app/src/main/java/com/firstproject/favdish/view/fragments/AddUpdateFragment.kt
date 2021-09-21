@@ -11,13 +11,14 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import com.bumptech.glide.Glide
 import com.firstproject.favdish.R
 import com.firstproject.favdish.databinding.AddUpdateFragmentBinding
+import com.firstproject.favdish.model.DialogCustomListModel
 import com.firstproject.favdish.utils.*
 import com.firstproject.favdish.view.dialogs.DialogCustomList
 import com.firstproject.favdish.view.dialogs.customImageSelectionDialog
@@ -28,7 +29,7 @@ class AddUpdateFragment : Fragment(), LifecycleObserver {
     private var _binding: AddUpdateFragmentBinding? = null
     private val binding get() = _binding!!
 
-    private val addUpdateViewModel: AddUpdateViewModel by viewModels()
+    private val addUpdateViewModel: AddUpdateViewModel by activityViewModels()
     private var changeActivity: ChangeActivity? = null
 
     private val startCameraXApp = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
@@ -107,26 +108,35 @@ class AddUpdateFragment : Fragment(), LifecycleObserver {
         }
 
         binding.etType.setOnClickListener {
-            DialogCustomList(
+            val dialogParams = DialogCustomListModel(
                 resources.getString(R.string.title_select_dish_type),
-                addUpdateViewModel, dishTypes(), FieldType.DISH_TYPE
+                dishTypes(),
+                FieldType.DISH_TYPE
             )
+
+            DialogCustomList.newInstance(dialogParams)
                 .show(requireActivity().supportFragmentManager, "dialog_type")
         }
 
         binding.etCategory.setOnClickListener {
-            DialogCustomList(
+            val dialogParams = DialogCustomListModel(
                 resources.getString(R.string.title_select_dish_category),
-                addUpdateViewModel, dishCategories(), FieldType.DISH_CATEGORY
+                dishCategories(),
+                FieldType.DISH_CATEGORY
             )
+
+            DialogCustomList.newInstance(dialogParams)
                 .show(requireActivity().supportFragmentManager, "dialog_category")
         }
 
         binding.etCookingTime.setOnClickListener {
-            DialogCustomList(
+            val dialogParams = DialogCustomListModel(
                 resources.getString(R.string.title_select_dish_cooking_time),
-                addUpdateViewModel, dishCookTime(), FieldType.DISH_COOKING_TIME
+                dishCookTime(),
+                FieldType.DISH_COOKING_TIME
             )
+
+            DialogCustomList.newInstance(dialogParams)
                 .show(requireActivity().supportFragmentManager, "dialog_cooking_time")
         }
     }

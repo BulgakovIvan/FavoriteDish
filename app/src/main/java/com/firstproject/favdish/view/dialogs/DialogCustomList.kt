@@ -5,22 +5,29 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.ViewModel
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firstproject.favdish.R
 import com.firstproject.favdish.databinding.DialogCustomListBinding
-import com.firstproject.favdish.utils.FieldType
+import com.firstproject.favdish.model.DialogCustomListModel
 import com.firstproject.favdish.view.adapters.DialogListItemAdapter
+import com.firstproject.favdish.viewmodels.AddUpdateViewModel
 
-class DialogCustomList(
-    private val title: String,
-    private val viewModel: ViewModel,
-    private val itemList: List<String>,
-    private val fieldType: FieldType
-) : DialogFragment() {
+class DialogCustomList : DialogFragment() {
+    private val addUpdateViewModel: AddUpdateViewModel by activityViewModels()
 
     private var _binding: DialogCustomListBinding? = null
     private val binding get() = _binding!!
+
+    private var parameters: DialogCustomListModel? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        parameters = arguments?.getParcelable(DIALOG_PARAMETERS)
+        if (parameters == null) {
+            dismiss()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,10 +42,12 @@ class DialogCustomList(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.tvDialogTitle.text = title
+        binding.tvDialogTitle.text = parameters!!.title
 
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
-        val adapter = DialogListItemAdapter(this, viewModel, itemList, fieldType)
+
+        val adapter = DialogListItemAdapter(this, addUpdateViewModel,
+            parameters!!.itemList, parameters!!.fieldType)
         binding.rvList.adapter = adapter
 
     }
@@ -53,5 +62,24 @@ class DialogCustomList(
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    companion object {
+        private const val DIALOG_PARAMETERS = "dialog_parameters"
+
+//        fun newInstance(params: DialogCustomListModel) : DialogCustomList {
+//            val args = Bundle()
+//            val fragment = DialogCustomList()
+//            args.putParcelable(DIALOG_PARAMETERS, params)
+//            fragment.arguments = args
+//            return fragment
+//        }
+
+        fun newInstance(params: DialogCustomListModel) =
+            DialogCustomList().apply {
+                arguments = Bundle().apply {
+                    putParcelable(DIALOG_PARAMETERS, params)
+                }
+            }
     }
 }
