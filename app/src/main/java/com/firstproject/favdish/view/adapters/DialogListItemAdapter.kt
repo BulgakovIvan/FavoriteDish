@@ -22,9 +22,9 @@ class DialogListItemAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
-        holder.tvText.text = item
+        holder.btnItem.text = item
 
-        holder.itemView.setOnClickListener {
+        holder.btnItem.setOnClickListener {
             if (viewModel is AddUpdateViewModel) {
                 when (fieldType) {
                     FieldType.DISH_TYPE -> {
@@ -47,6 +47,7 @@ class DialogListItemAdapter(
     override fun getItemCount(): Int = list.size
 
     class ViewHolder(view: ItemCustomListBinding) : RecyclerView.ViewHolder(view.root) {
-        val tvText = view.tvText
+//        val tvText = view.tvText
+        val btnItem = view.btnItem
     }
 }
