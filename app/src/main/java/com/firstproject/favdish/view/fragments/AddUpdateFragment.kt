@@ -18,7 +18,8 @@ import androidx.lifecycle.OnLifecycleEvent
 import com.bumptech.glide.Glide
 import com.firstproject.favdish.R
 import com.firstproject.favdish.databinding.AddUpdateFragmentBinding
-import com.firstproject.favdish.utils.saveImage
+import com.firstproject.favdish.utils.*
+import com.firstproject.favdish.view.dialogs.DialogCustomList
 import com.firstproject.favdish.view.dialogs.customImageSelectionDialog
 import com.firstproject.favdish.viewmodels.AddUpdateViewModel
 
@@ -93,6 +94,23 @@ class AddUpdateFragment : Fragment(), LifecycleObserver {
                     .into(binding.ivDishImage)
         }
 
+        binding.etType.setOnClickListener {
+            DialogCustomList(
+                resources.getString(R.string.title_select_dish_type), dishTypes(), DISH_TYPE)
+                .show(requireActivity().supportFragmentManager, "dialog_type")
+        }
+
+        binding.etCategory.setOnClickListener {
+            DialogCustomList(
+                resources.getString(R.string.title_select_dish_category), dishCategories(), DISH_CATEGORY)
+                .show(requireActivity().supportFragmentManager, "dialog_category")
+        }
+
+        binding.etCookingTime.setOnClickListener {
+            DialogCustomList(
+                resources.getString(R.string.title_select_dish_cooking_time), dishCookTime(), DISH_COOKING_TIME)
+                .show(requireActivity().supportFragmentManager, "dialog_cooking_time")
+        }
     }
 
     override fun onDestroy() {

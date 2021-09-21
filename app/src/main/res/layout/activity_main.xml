@@ -27,7 +27,8 @@
         app:layout_constraintBottom_toTopOf="@id/nav_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_add"
-        app:tint="@color/white"/>
+        app:tint="@color/white"
+        app:backgroundTint="@color/primary_color"/>
 
     <fragment
         android:id="@+id/nav_host_fragment_activity_main"
