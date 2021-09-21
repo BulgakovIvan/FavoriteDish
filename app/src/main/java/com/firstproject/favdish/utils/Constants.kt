@@ -8,6 +8,8 @@ const val SPLASH_ANIMATION_DURATION = 100L
 const val MAIN_ACTIVITY_DELAY = 100L
 const val TAKE_PHOTO_DELAY = 800L
 
-const val DISH_TYPE: String = "DishType"
-const val DISH_CATEGORY: String = "DishCategory"
-const val DISH_COOKING_TIME: String = "DishCookingTime"
+enum class FieldType{
+    DISH_TYPE,
+    DISH_CATEGORY,
+    DISH_COOKING_TIME
+}

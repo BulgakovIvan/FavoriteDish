@@ -5,15 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firstproject.favdish.R
 import com.firstproject.favdish.databinding.DialogCustomListBinding
+import com.firstproject.favdish.utils.FieldType
 import com.firstproject.favdish.view.adapters.DialogListItemAdapter
 
 class DialogCustomList(
     private val title: String,
+    private val viewModel: ViewModel,
     private val itemList: List<String>,
-    private val selection: String = ""
+    private val fieldType: FieldType
 ) : DialogFragment() {
 
     private var _binding: DialogCustomListBinding? = null
@@ -35,8 +38,9 @@ class DialogCustomList(
         binding.tvDialogTitle.text = title
 
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
-        val adapter = DialogListItemAdapter(requireActivity(), itemList, selection)
+        val adapter = DialogListItemAdapter(this, viewModel, itemList, fieldType)
         binding.rvList.adapter = adapter
+
     }
 
     override fun onStart() {

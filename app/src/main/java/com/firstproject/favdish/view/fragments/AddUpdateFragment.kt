@@ -94,21 +94,39 @@ class AddUpdateFragment : Fragment(), LifecycleObserver {
                     .into(binding.ivDishImage)
         }
 
+        addUpdateViewModel.apply {
+            type.observe(viewLifecycleOwner) {
+                binding.etType.setText(it)
+            }
+            category.observe(viewLifecycleOwner) {
+                binding.etCategory.setText(it)
+            }
+            cookingTime.observe(viewLifecycleOwner) {
+                binding.etCookingTime.setText(it)
+            }
+        }
+
         binding.etType.setOnClickListener {
             DialogCustomList(
-                resources.getString(R.string.title_select_dish_type), dishTypes(), DISH_TYPE)
+                resources.getString(R.string.title_select_dish_type),
+                addUpdateViewModel, dishTypes(), FieldType.DISH_TYPE
+            )
                 .show(requireActivity().supportFragmentManager, "dialog_type")
         }
 
         binding.etCategory.setOnClickListener {
             DialogCustomList(
-                resources.getString(R.string.title_select_dish_category), dishCategories(), DISH_CATEGORY)
+                resources.getString(R.string.title_select_dish_category),
+                addUpdateViewModel, dishCategories(), FieldType.DISH_CATEGORY
+            )
                 .show(requireActivity().supportFragmentManager, "dialog_category")
         }
 
         binding.etCookingTime.setOnClickListener {
             DialogCustomList(
-                resources.getString(R.string.title_select_dish_cooking_time), dishCookTime(), DISH_COOKING_TIME)
+                resources.getString(R.string.title_select_dish_cooking_time),
+                addUpdateViewModel, dishCookTime(), FieldType.DISH_COOKING_TIME
+            )
                 .show(requireActivity().supportFragmentManager, "dialog_cooking_time")
         }
     }

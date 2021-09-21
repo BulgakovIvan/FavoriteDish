@@ -113,8 +113,8 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
         binding.ivAddDishImage.setOnClickListener(this)
 
         binding.btnAddDish.setOnClickListener{
-            val dialog = DialogCustomList("Category", dishCategories(), "select")
-            dialog.show(supportFragmentManager, "dialog")
+//            val dialog = DialogCustomList("Category", dishCategories(), "select")
+//            dialog.show(supportFragmentManager, "dialog")
         }
     }
 
