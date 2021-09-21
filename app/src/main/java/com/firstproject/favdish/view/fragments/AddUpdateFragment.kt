@@ -3,9 +3,11 @@ package com.firstproject.favdish.view.fragments
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -140,6 +142,47 @@ class AddUpdateFragment : Fragment(), LifecycleObserver {
             DialogCustomList.newInstance(dialogParams)
                 .show(requireActivity().supportFragmentManager, "dialog_cooking_time")
         }
+
+        binding.btnAddDish.setOnClickListener {
+            val title = binding.etTitle.text.toString().trim { it <= ' ' }
+            val type = binding.etType.text.toString().trim { it <= ' ' }
+            val category = binding.etCategory.text.toString().trim { it <= ' ' }
+            val ingredients = binding.etIngredients.text.toString().trim { it <= ' ' }
+            val cookingTimeInMinutes = binding.etCookingTime.text.toString().trim { it <= ' ' }
+            val cookingDirection = binding.etDirectionToCook.text.toString().trim { it <= ' ' }
+
+            when {
+                TextUtils.isEmpty(addUpdateViewModel.imagePath.toString()) -> {
+                    makeToast(resources.getString(R.string.err_msg_select_dish_image))
+                }
+                TextUtils.isEmpty(title) -> {
+                    makeToast(resources.getString(R.string.err_msg_enter_dish_title))
+                }
+                TextUtils.isEmpty(type) -> {
+                    makeToast(resources.getString(R.string.err_msg_select_dish_type))
+                }
+                TextUtils.isEmpty(category) -> {
+                    makeToast(resources.getString(R.string.err_msg_select_dish_category))
+                }
+                TextUtils.isEmpty(ingredients) -> {
+                    makeToast(resources.getString(R.string.err_msg_enter_dish_ingredients))
+                }
+                TextUtils.isEmpty(cookingTimeInMinutes) -> {
+                    makeToast(resources.getString(R.string.err_msg_select_dish_cooking_time))
+                }
+                TextUtils.isEmpty(cookingDirection) -> {
+                    makeToast(resources.getString(R.string.err_msg_enter_dish_cooking_instructions))
+                }
+                else -> {
+                    // TODO Step 8: Show the Toast Message for now that you dish entry is valid.
+                    makeToast("All the entries are valid.")
+                }
+            }
+        }
+    }
+
+    private fun makeToast(text: String) {
+        Toast.makeText(requireActivity(), text, Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroy() {
