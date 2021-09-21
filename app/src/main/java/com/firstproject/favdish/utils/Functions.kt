@@ -23,7 +23,7 @@ fun getInternalStorage(context: Context, directory: String): File {
     return wrapper.getDir(directory, Context.MODE_PRIVATE)
 }
 
-fun saveImage(context: Context, bitmap: Bitmap, directory: String = IMAGE_DIRECTORY) {
+fun saveImage(context: Context, bitmap: Bitmap, directory: String = IMAGE_DIRECTORY) : String {
     val imageFile = File(
         getInternalStorage(context, directory),
         SimpleDateFormat(IMAGE_FILENAME_FORMAT, Locale.getDefault())
@@ -36,18 +36,19 @@ fun saveImage(context: Context, bitmap: Bitmap, directory: String = IMAGE_DIRECT
         stream.flush()
         stream.close()
 
-        Log.e(TAG, "Image save to: ${imageFile.absolutePath}")
+//        Log.e(TAG, "Image save to: ${imageFile.absolutePath}")
     } catch (e: IOException) {
         e.printStackTrace()
     }
+    return imageFile.absolutePath
 }
 
-fun saveImage(context: Context, uri: Uri, directory: String = IMAGE_DIRECTORY) {
+fun saveImage(context: Context, uri: Uri, directory: String = IMAGE_DIRECTORY) : String {
     val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
         ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.contentResolver, uri))
     } else {
         MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
     }
 
-    saveImage(context, bitmap, directory)
+    return saveImage(context, bitmap, directory)
 }

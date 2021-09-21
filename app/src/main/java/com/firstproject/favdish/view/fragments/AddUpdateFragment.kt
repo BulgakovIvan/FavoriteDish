@@ -2,7 +2,6 @@ package com.firstproject.favdish.view.fragments
 
 import android.app.Activity
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -34,8 +33,10 @@ class AddUpdateFragment : Fragment(), LifecycleObserver {
 
     private val startCameraXApp = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
         if (result.resultCode == Activity.RESULT_OK) {
-            val uri = result.data?.getStringExtra(IMAGE_URI)
-            addUpdateViewModel.setImageUri(Uri.parse(uri))
+            val path = result.data?.getStringExtra(IMAGE_URI)
+            if (!path.isNullOrEmpty()) {
+                addUpdateViewModel.setImagePath(path)
+            }
 
             binding.ivAddDishImage.setImageDrawable(
                 ContextCompat.getDrawable(requireActivity(), R.drawable.ic_vector_edit))
@@ -44,8 +45,8 @@ class AddUpdateFragment : Fragment(), LifecycleObserver {
 
     private val getContent = registerForActivityResult(ActivityResultContracts.GetContent()){ uri ->
         uri.let {
-            addUpdateViewModel.setImageUri(it)
-            saveImage(requireActivity(), it)
+            val path = saveImage(requireActivity(), it)
+            addUpdateViewModel.setImagePath(path)
 
             binding.ivAddDishImage.setImageDrawable(
                 ContextCompat.getDrawable(requireActivity(), R.drawable.ic_vector_edit))
@@ -88,7 +89,7 @@ class AddUpdateFragment : Fragment(), LifecycleObserver {
             customImageSelectionDialog(this,startCameraXApp, getContent)
         }
 
-        addUpdateViewModel.imageUri.observe(viewLifecycleOwner) {
+        addUpdateViewModel.imagePath.observe(viewLifecycleOwner) {
             Glide.with(this)
                     .load(it)
                     .centerCrop()

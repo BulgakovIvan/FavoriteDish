@@ -1,10 +1,12 @@
 package com.firstproject.favdish.view.activities
 
+import android.content.Intent
 import android.icu.text.SimpleDateFormat
-import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -12,15 +14,12 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import com.firstproject.favdish.databinding.ActivityCameraXappBinding
+import com.firstproject.favdish.utils.*
+import com.firstproject.favdish.view.fragments.AddUpdateFragment
 import java.io.File
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import android.content.Intent
-import android.os.Handler
-import android.os.Looper
-import com.firstproject.favdish.utils.*
-import com.firstproject.favdish.view.fragments.AddUpdateFragment
 
 
 class CameraXApp : AppCompatActivity() {
@@ -105,13 +104,10 @@ class CameraXApp : AppCompatActivity() {
                 }
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                    val savedUri = Uri.fromFile(photoFile)
-                    val msg = "Photo capture succeeded: $savedUri"
-//                    Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
-                    Log.e(TAG, msg)
+//                    val savedUri = Uri.fromFile(photoFile)
 
                     val data = Intent()
-                    data.putExtra(AddUpdateFragment.IMAGE_URI, savedUri.toString())
+                    data.putExtra(AddUpdateFragment.IMAGE_URI, photoFile.absolutePath)
                     setResult(RESULT_OK, data)
                     finish()
                 }
