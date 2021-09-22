@@ -3,25 +3,22 @@ package com.firstproject.favdish.view.fragments
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
-import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import com.firstproject.favdish.R
+import com.firstproject.favdish.application.FavDishApplication
 import com.firstproject.favdish.databinding.FragmentAllDishesBinding
 import com.firstproject.favdish.view.activities.AddUpdateDishActivity
-import com.firstproject.favdish.viewmodels.HomeViewModel
+import com.firstproject.favdish.viewmodels.AllDishesViewModel
+import com.firstproject.favdish.viewmodels.AllDishesViewModelFactory
 
 class AllDishesFragment : Fragment() {
 
-    // TODO: 17.09.2021 view model
-    private val homeViewModel: HomeViewModel by viewModels()
-//    private lateinit var homeViewModel: HomeViewModel
-    private var _binding: FragmentAllDishesBinding? = null
+    private val allDishesViewModel: AllDishesViewModel by viewModels {
+        AllDishesViewModelFactory((requireActivity().application as FavDishApplication).repository)
+    }
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    private var _binding: FragmentAllDishesBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,20 +31,23 @@ class AllDishesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // TODO: 17.09.2021 del viewmodel provider???
-//        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-//        val homeViewModel by viewModels<HomeViewModel>()
-//        val homeViewModel: HomeViewModel by viewModels()
-
         _binding = FragmentAllDishesBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        return binding.root
+    }
 
-        val textView: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner, {
-            textView.text = it
-        })
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        return root
+        allDishesViewModel.allDishesList.observe(viewLifecycleOwner) { dishes ->
+            dishes.let {
+                var str = ""
+                for (item in it) {
+                    str += "Dish title ${item.title}, category: ${item.category} \n"
+                }
+                binding.textHome.text = str
+            }
+
+        }
     }
 
     override fun onDestroyView() {

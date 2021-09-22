@@ -66,7 +66,7 @@ class AddUpdateViewModel(private val repository: FavDishRepository) : ViewModel(
         cleanViewModel()
     }
 
-    fun cleanViewModel() {
+    private fun cleanViewModel() {
         setImagePath("")
         setType("")
         setCategory("")
