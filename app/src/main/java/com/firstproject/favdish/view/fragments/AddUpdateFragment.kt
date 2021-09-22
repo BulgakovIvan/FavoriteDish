@@ -3,7 +3,6 @@ package com.firstproject.favdish.view.fragments
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,20 +19,23 @@ import androidx.lifecycle.OnLifecycleEvent
 import com.bumptech.glide.Glide
 import com.firstproject.favdish.BR
 import com.firstproject.favdish.R
+import com.firstproject.favdish.application.FavDishApplication
 import com.firstproject.favdish.databinding.AddUpdateFragmentBinding
-
-
 import com.firstproject.favdish.model.DialogCustomListModel
 import com.firstproject.favdish.utils.*
 import com.firstproject.favdish.view.dialogs.DialogCustomList
 import com.firstproject.favdish.view.dialogs.customImageSelectionDialog
 import com.firstproject.favdish.viewmodels.AddUpdateViewModel
+import com.firstproject.favdish.viewmodels.AddUpdateViewModelFactory
 
 class AddUpdateFragment : Fragment(), LifecycleObserver {
 
     private lateinit var binding: AddUpdateFragmentBinding
 
-    private val addUpdateViewModel: AddUpdateViewModel by activityViewModels()
+    private val addUpdateViewModel: AddUpdateViewModel by activityViewModels {
+        AddUpdateViewModelFactory((requireActivity().application as FavDishApplication).repository)
+    }
+
     private var changeActivity: ChangeActivity? = null
 
     private val startCameraXApp = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->

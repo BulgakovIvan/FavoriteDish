@@ -1,12 +1,11 @@
 package com.firstproject.favdish.viewmodels
 
-import android.text.TextUtils
-import androidx.databinding.Bindable
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import com.firstproject.favdish.model.database.FavDishRepository
+import com.firstproject.favdish.model.entities.FavDish
+import kotlinx.coroutines.launch
 
-class AddUpdateViewModel : ViewModel() {
+class AddUpdateViewModel(private val repository: FavDishRepository) : ViewModel() {
 
     private val _imagePath = MutableLiveData<String>()
     val imagePath: LiveData<String> = _imagePath
@@ -44,5 +43,19 @@ class AddUpdateViewModel : ViewModel() {
         title.value = title.value?.trim()
         ingredients.value = ingredients.value?.trim()
         instruction.value = instruction.value?.trim()
+    }
+
+    fun insert(dish: FavDish) = viewModelScope.launch {
+        repository.insertFavDishData(dish)
+    }
+}
+
+class AddUpdateViewModelFactory(private val repository: FavDishRepository) :
+    ViewModelProvider.Factory {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(AddUpdateViewModel::class.java))
+            @Suppress("UNCHECKED_CAST")
+            return AddUpdateViewModel(repository) as T
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
