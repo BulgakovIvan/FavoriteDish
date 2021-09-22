@@ -1,6 +1,7 @@
 package com.firstproject.favdish.model.database
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -24,8 +25,10 @@ abstract class FavDishRoomDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     FavDishRoomDatabase::class.java,
-                    "word_database"
-                ).build()
+                    "fav_dish_database"
+                )
+                    .fallbackToDestructiveMigration()
+                    .build()
                 INSTANCE = instance
                 // return instance
                 instance

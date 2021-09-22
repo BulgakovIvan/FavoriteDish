@@ -3,6 +3,7 @@ package com.firstproject.favdish.view.fragments
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,9 +14,11 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
+import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.firstproject.favdish.BR
 import com.firstproject.favdish.R
@@ -185,8 +188,13 @@ class AddUpdateFragment : Fragment(), LifecycleObserver {
                     makeToast(resources.getString(R.string.err_msg_enter_dish_cooking_instructions))
                 }
                 else -> {
-                    // TODO Step 8: Show the Toast Message for now that you dish entry is valid.
                     makeToast("All the entries are valid.")
+                    addUpdateViewModel.insert()
+                    changeActivity?.hideMenu(true)
+
+                    // TODO: 22.09.2021 navigation with popUP
+                    requireActivity().findNavController(R.id.nav_host_fragment_activity_main)
+                        .navigate(R.id.navigation_home)
                 }
             }
         }

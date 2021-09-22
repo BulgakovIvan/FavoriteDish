@@ -1,9 +1,7 @@
 package com.firstproject.favdish.view.activities
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -11,8 +9,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.firstproject.favdish.R
 import com.firstproject.favdish.databinding.ActivityMainBinding
-import com.firstproject.favdish.utils.TAG
 import com.firstproject.favdish.view.fragments.AddUpdateFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity(), AddUpdateFragment.ChangeActivity {
 
@@ -23,8 +21,7 @@ class MainActivity : AppCompatActivity(), AddUpdateFragment.ChangeActivity {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
+        
         val navView: BottomNavigationView = binding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)

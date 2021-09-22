@@ -3,6 +3,7 @@ package com.firstproject.favdish.viewmodels
 import androidx.lifecycle.*
 import com.firstproject.favdish.model.database.FavDishRepository
 import com.firstproject.favdish.model.entities.FavDish
+import com.firstproject.favdish.utils.DISH_IMAGE_SOURCE_LOCAL
 import kotlinx.coroutines.launch
 
 class AddUpdateViewModel(private val repository: FavDishRepository) : ViewModel() {
@@ -45,8 +46,35 @@ class AddUpdateViewModel(private val repository: FavDishRepository) : ViewModel(
         instruction.value = instruction.value?.trim()
     }
 
-    fun insert(dish: FavDish) = viewModelScope.launch {
-        repository.insertFavDishData(dish)
+    fun insert() {
+        val favDishDetails = FavDish(
+            imagePath.value!!,
+            DISH_IMAGE_SOURCE_LOCAL,
+            title.value!!,
+            type.value!!,
+            category.value!!,
+            ingredients.value!!,
+            cookingTime.value!!,
+            instruction.value!!,
+            false
+        )
+
+        viewModelScope.launch {
+            repository.insertFavDishData(favDishDetails)
+        }
+
+        cleanViewModel()
+    }
+
+    fun cleanViewModel() {
+        setImagePath("")
+        setType("")
+        setCategory("")
+        setCookingTime("")
+
+        title.value = ""
+        ingredients.value = ""
+        instruction.value = ""
     }
 }
 
