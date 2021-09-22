@@ -11,14 +11,18 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import com.bumptech.glide.Glide
+import com.firstproject.favdish.BR
 import com.firstproject.favdish.R
 import com.firstproject.favdish.databinding.AddUpdateFragmentBinding
+
+
 import com.firstproject.favdish.model.DialogCustomListModel
 import com.firstproject.favdish.utils.*
 import com.firstproject.favdish.view.dialogs.DialogCustomList
@@ -27,8 +31,7 @@ import com.firstproject.favdish.viewmodels.AddUpdateViewModel
 
 class AddUpdateFragment : Fragment(), LifecycleObserver {
 
-    private var _binding: AddUpdateFragmentBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: AddUpdateFragmentBinding
 
     private val addUpdateViewModel: AddUpdateViewModel by activityViewModels()
     private var changeActivity: ChangeActivity? = null
@@ -80,12 +83,16 @@ class AddUpdateFragment : Fragment(), LifecycleObserver {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = AddUpdateFragmentBinding.inflate(inflater, container, false)
+        binding = DataBindingUtil.inflate(
+            inflater, R.layout.add_update_fragment, container, false)
+        binding.lifecycleOwner = this
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.setVariable(BR.myAddUpdateViewModel, addUpdateViewModel)
 
         binding.ivAddDishImage.setOnClickListener {
             customImageSelectionDialog(this,startCameraXApp, getContent)
@@ -144,33 +151,35 @@ class AddUpdateFragment : Fragment(), LifecycleObserver {
         }
 
         binding.btnAddDish.setOnClickListener {
-            val title = binding.etTitle.text.toString().trim { it <= ' ' }
-            val type = binding.etType.text.toString().trim { it <= ' ' }
-            val category = binding.etCategory.text.toString().trim { it <= ' ' }
-            val ingredients = binding.etIngredients.text.toString().trim { it <= ' ' }
-            val cookingTimeInMinutes = binding.etCookingTime.text.toString().trim { it <= ' ' }
-            val cookingDirection = binding.etDirectionToCook.text.toString().trim { it <= ' ' }
+            addUpdateViewModel.trimValues()
+
+//            val title = binding.etTitle.text.toString().trim { it <= ' ' }
+//            val type = binding.etType.text.toString().trim { it <= ' ' }
+//            val category = binding.etCategory.text.toString().trim { it <= ' ' }
+//            val ingredients = binding.etIngredients.text.toString().trim { it <= ' ' }
+//            val cookingTimeInMinutes = binding.etCookingTime.text.toString().trim { it <= ' ' }
+//            val cookingDirection = binding.etDirectionToCook.text.toString().trim { it <= ' ' }
 
             when {
-                TextUtils.isEmpty(addUpdateViewModel.imagePath.toString()) -> {
+                addUpdateViewModel.imagePath.value.isNullOrEmpty() -> {
                     makeToast(resources.getString(R.string.err_msg_select_dish_image))
                 }
-                TextUtils.isEmpty(title) -> {
+                addUpdateViewModel.title.value.isNullOrEmpty() -> {
                     makeToast(resources.getString(R.string.err_msg_enter_dish_title))
                 }
-                TextUtils.isEmpty(type) -> {
+                addUpdateViewModel.type.value.isNullOrEmpty() -> {
                     makeToast(resources.getString(R.string.err_msg_select_dish_type))
                 }
-                TextUtils.isEmpty(category) -> {
+                addUpdateViewModel.category.value.isNullOrEmpty() -> {
                     makeToast(resources.getString(R.string.err_msg_select_dish_category))
                 }
-                TextUtils.isEmpty(ingredients) -> {
+                addUpdateViewModel.ingredients.value.isNullOrEmpty() -> {
                     makeToast(resources.getString(R.string.err_msg_enter_dish_ingredients))
                 }
-                TextUtils.isEmpty(cookingTimeInMinutes) -> {
+                addUpdateViewModel.cookingTime.value.isNullOrEmpty() -> {
                     makeToast(resources.getString(R.string.err_msg_select_dish_cooking_time))
                 }
-                TextUtils.isEmpty(cookingDirection) -> {
+                addUpdateViewModel.instruction.value.isNullOrEmpty() -> {
                     makeToast(resources.getString(R.string.err_msg_enter_dish_cooking_instructions))
                 }
                 else -> {
@@ -188,7 +197,6 @@ class AddUpdateFragment : Fragment(), LifecycleObserver {
     override fun onDestroy() {
         super.onDestroy()
         changeActivity?.hideMenu(true)
-        _binding = null
     }
 
     interface ChangeActivity {
