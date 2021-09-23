@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity(), AddUpdateFragment.ChangeActivity {
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_all_dishes, R.id.navigation_favorite_dishes,
-                R.id.navigation_random_dish, R.id.navigation_addUpdate
+                R.id.navigation_random_dish, R.id.navigation_addUpdate, R.id.navigation_dish_detail
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.firstproject.favdish.R
 import com.firstproject.favdish.application.FavDishApplication
@@ -41,7 +42,7 @@ class AllDishesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.rvDishesList.layoutManager = GridLayoutManager(requireActivity(), 2)
-        val favDishAdapter = FavDishAdapter()
+        val favDishAdapter = FavDishAdapter(this)
         binding.rvDishesList.adapter = favDishAdapter
 
         allDishesViewModel.allDishesList.observe(viewLifecycleOwner) { dishes ->
@@ -78,5 +79,9 @@ class AllDishesFragment : Fragment() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    fun dishDetails() {
+        findNavController().navigate(AllDishesFragmentDirections.actionNavigationAllDishesToDishDetailsFragment())
     }
 }
