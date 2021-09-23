@@ -6,33 +6,30 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.firstproject.favdish.databinding.FragmentDashboardBinding
-import com.firstproject.favdish.viewmodels.DashboardViewModel
+import com.firstproject.favdish.databinding.FragmentFavoriteDishesBinding
+import com.firstproject.favdish.viewmodels.FavoriteDishesViewModel
 
-class DashboardFragment : Fragment() {
+class FavoriteDishesFragment : Fragment() {
 
-    private lateinit var dashboardViewModel: DashboardViewModel
-    private var _binding: FragmentDashboardBinding? = null
+    private lateinit var favoriteDishesViewModel: FavoriteDishesViewModel
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    private var _binding: FragmentFavoriteDishesBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        dashboardViewModel =
-            ViewModelProvider(this).get(DashboardViewModel::class.java)
+    ): View {
+        favoriteDishesViewModel =
+            ViewModelProvider(this).get(FavoriteDishesViewModel::class.java)
 
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        _binding = FragmentFavoriteDishesBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         val textView: TextView = binding.textDashboard
-        dashboardViewModel.text.observe(viewLifecycleOwner, Observer {
+        favoriteDishesViewModel.text.observe(viewLifecycleOwner, {
             textView.text = it
         })
         return root

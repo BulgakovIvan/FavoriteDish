@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
 import com.firstproject.favdish.R
 import com.firstproject.favdish.application.FavDishApplication
 import com.firstproject.favdish.databinding.FragmentAllDishesBinding
 import com.firstproject.favdish.view.activities.AddUpdateDishActivity
+import com.firstproject.favdish.view.adapters.FavDishAdapter
 import com.firstproject.favdish.viewmodels.AllDishesViewModel
 import com.firstproject.favdish.viewmodels.AllDishesViewModelFactory
 
@@ -38,13 +40,21 @@ class AllDishesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.rvDishesList.layoutManager = GridLayoutManager(requireActivity(), 2)
+        val favDishAdapter = FavDishAdapter()
+        binding.rvDishesList.adapter = favDishAdapter
+
         allDishesViewModel.allDishesList.observe(viewLifecycleOwner) { dishes ->
             dishes.let {
-                var str = ""
-                for (item in it) {
-                    str += "Dish title ${item.title}, category: ${item.category} \n"
+                if (it.isNotEmpty()) {
+                    binding.rvDishesList.visibility = View.VISIBLE
+                    binding.tvNoDishesAddedYet.visibility = View.GONE
+
+                    favDishAdapter.dishesList(it)
+                } else {
+                    binding.rvDishesList.visibility = View.GONE
+                    binding.tvNoDishesAddedYet.visibility = View.VISIBLE
                 }
-                binding.textHome.text = str
             }
 
         }

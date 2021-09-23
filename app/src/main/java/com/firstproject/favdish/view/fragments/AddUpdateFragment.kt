@@ -192,7 +192,7 @@ class AddUpdateFragment : Fragment(), LifecycleObserver {
 
                     // TODO: 22.09.2021 navigation with popUP
                     requireActivity().findNavController(R.id.nav_host_fragment_activity_main)
-                        .navigate(R.id.navigation_home)
+                        .navigate(R.id.navigation_all_dishes)
                 }
             }
         }
