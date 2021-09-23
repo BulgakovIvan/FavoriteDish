@@ -11,6 +11,7 @@ import com.firstproject.favdish.R
 import com.firstproject.favdish.application.FavDishApplication
 import com.firstproject.favdish.databinding.FragmentAllDishesBinding
 import com.firstproject.favdish.view.activities.AddUpdateDishActivity
+import com.firstproject.favdish.view.activities.MainActivity
 import com.firstproject.favdish.view.adapters.FavDishAdapter
 import com.firstproject.favdish.viewmodels.AllDishesViewModel
 import com.firstproject.favdish.viewmodels.AllDishesViewModelFactory
@@ -61,6 +62,13 @@ class AllDishesFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (requireActivity() is MainActivity) {
+            (activity as MainActivity).showBottomNavigationView()
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -83,5 +91,9 @@ class AllDishesFragment : Fragment() {
 
     fun dishDetails() {
         findNavController().navigate(AllDishesFragmentDirections.actionNavigationAllDishesToDishDetailsFragment())
+
+        if (requireActivity() is MainActivity) {
+            (activity as MainActivity).hideBottomNavigationView()
+        }
     }
 }
