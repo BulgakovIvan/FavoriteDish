@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
 import com.firstproject.favdish.databinding.FragmentDishDetailsBinding
 
 private const val ARG_PARAM1 = "param1"
@@ -35,6 +36,11 @@ class DishDetailsFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val args: DishDetailsFragmentArgs by navArgs()
+        binding.tvTitle.text = args.dishDetails.title
+    }
 //    companion object {
 //        @JvmStatic
 //        fun newInstance(param1: String, param2: String) =

@@ -57,6 +57,7 @@ class MainActivity : AppCompatActivity(), AddUpdateFragment.ChangeActivity {
         return NavigationUI.navigateUp(navController, null)
     }
 
+    // TODO: 23.09.2021 hide floating action button
     fun hideBottomNavigationView() {
         binding.navView.clearAnimation()
         binding.navView.animate().translationY(binding.navView.height.toFloat()).duration = 300

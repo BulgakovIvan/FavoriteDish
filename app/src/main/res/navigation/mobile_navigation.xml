@@ -37,5 +37,9 @@
         android:id="@+id/navigation_dish_detail"
         android:name="com.firstproject.favdish.view.fragments.DishDetailsFragment"
         android:label="Dish details"
-        tools:layout="@layout/fragment_dish_details" />
+        tools:layout="@layout/fragment_dish_details" >
+        <argument
+            android:name="dishDetails"
+            app:argType="com.firstproject.favdish.model.entities.FavDish" />
+    </fragment>
 </navigation>

@@ -32,6 +32,6 @@
 
     <string name="label_no_dishes_added_yet">No dishes added yet!!!</string>
     <string name="add_dish">Add Dish</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
