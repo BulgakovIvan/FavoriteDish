@@ -39,7 +39,7 @@
             android:id="@+id/action_navigation_addUpdate_to_navigation_all_dishes"
             app:destination="@id/navigation_all_dishes"
             app:popUpTo="@id/navigation_all_dishes"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="false" />
     </fragment>
 
     <fragment

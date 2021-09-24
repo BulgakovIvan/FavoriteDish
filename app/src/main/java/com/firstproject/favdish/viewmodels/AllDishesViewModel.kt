@@ -3,10 +3,15 @@ package com.firstproject.favdish.viewmodels
 import androidx.lifecycle.*
 import com.firstproject.favdish.model.database.FavDishRepository
 import com.firstproject.favdish.model.entities.FavDish
+import kotlinx.coroutines.launch
 
-class AllDishesViewModel(repository: FavDishRepository) : ViewModel() {
+class AllDishesViewModel(private val repository: FavDishRepository) : ViewModel() {
 
     val allDishesList: LiveData<List<FavDish>> = repository.allDishesList.asLiveData()
+
+    fun update(dish: FavDish) = viewModelScope.launch {
+        repository.updateFavDishData(dish)
+    }
 }
 
 class AllDishesViewModelFactory(private val repository: FavDishRepository) :
