@@ -34,7 +34,13 @@
         android:id="@+id/navigation_addUpdate"
         android:name="com.firstproject.favdish.view.fragments.AddUpdateFragment"
         android:label="Add dish"
-        tools:layout="@layout/add_update_fragment" />
+        tools:layout="@layout/add_update_fragment" >
+        <action
+            android:id="@+id/action_navigation_addUpdate_to_navigation_all_dishes"
+            app:destination="@id/navigation_all_dishes"
+            app:popUpTo="@id/navigation_all_dishes"
+            app:popUpToInclusive="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_dish_detail"

@@ -13,7 +13,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LifecycleObserver
-import androidx.navigation.findNavController
+import androidx.navigation.Navigation
 import com.bumptech.glide.Glide
 import com.firstproject.favdish.BR
 import com.firstproject.favdish.R
@@ -156,8 +156,11 @@ class AddUpdateFragment : Fragment(), LifecycleObserver {
                     makeToast("All the entries are valid.")
                     addUpdateViewModel.insert()
 
-                    requireActivity().findNavController(R.id.nav_host_fragment_activity_main)
-                        .navigate(R.id.navigation_all_dishes)
+//                    requireActivity().findNavController(R.id.nav_host_fragment_activity_main)
+//                        .navigate(R.id.navigation_all_dishes)
+                    Navigation.findNavController(it).navigate(
+                        AddUpdateFragmentDirections.actionNavigationAddUpdateToNavigationAllDishes()
+                    )
                 }
             }
         }
