@@ -9,7 +9,7 @@ import com.firstproject.favdish.databinding.ItemDishLayoutBinding
 import com.firstproject.favdish.model.entities.FavDish
 import com.firstproject.favdish.view.fragments.AllDishesFragment
 
-// TODO: 22.09.2021 change to list adapter, with databind adapter???
+@Suppress("unused")
 class FavDishAdapter(private val fragment: AllDishesFragment)
     :RecyclerView.Adapter<FavDishAdapter.ViewHolder>(){
 

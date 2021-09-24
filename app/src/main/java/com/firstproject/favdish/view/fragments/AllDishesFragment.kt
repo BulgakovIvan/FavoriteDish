@@ -12,7 +12,7 @@ import com.firstproject.favdish.databinding.FragmentAllDishesBinding
 import com.firstproject.favdish.model.entities.FavDish
 import com.firstproject.favdish.view.activities.AddUpdateDishActivity
 import com.firstproject.favdish.view.activities.MainActivity
-import com.firstproject.favdish.view.adapters.FavDishAdapter
+import com.firstproject.favdish.view.adapters.FavDishListAdapter
 import com.firstproject.favdish.viewmodels.AllDishesViewModel
 import com.firstproject.favdish.viewmodels.AllDishesViewModelFactory
 
@@ -43,7 +43,10 @@ class AllDishesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.rvDishesList.layoutManager = GridLayoutManager(requireActivity(), 2)
-        val favDishAdapter = FavDishAdapter(this)
+//        val favDishAdapter = FavDishAdapter(this)
+//        with ListAdapter
+        val favDishAdapter = FavDishListAdapter(this)
+
         binding.rvDishesList.adapter = favDishAdapter
 
         allDishesViewModel.allDishesList.observe(viewLifecycleOwner) { dishes ->
@@ -52,7 +55,7 @@ class AllDishesFragment : Fragment() {
                     binding.rvDishesList.visibility = View.VISIBLE
                     binding.tvNoDishesAddedYet.visibility = View.GONE
 
-                    favDishAdapter.dishesList(it)
+                    favDishAdapter.submitList(it)
                 } else {
                     binding.rvDishesList.visibility = View.GONE
                     binding.tvNoDishesAddedYet.visibility = View.VISIBLE
