@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_navigation_all_dishes_to_dishDetailsFragment"
             app:destination="@id/navigation_dish_detail" />
+        <action
+            android:id="@+id/action_navigation_all_dishes_to_navigation_addUpdate"
+            app:destination="@id/navigation_addUpdate"/>
     </fragment>
 
     <fragment

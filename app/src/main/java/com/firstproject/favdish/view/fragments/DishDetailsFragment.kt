@@ -45,7 +45,6 @@ class DishDetailsFragment : Fragment() {
         val args: DishDetailsFragmentArgs by navArgs()
         args.let {
             try {
-                // Load the dish image in the ImageView.
                 Glide.with(requireActivity())
                     .load(it.dishDetails.image)
                     .centerCrop()

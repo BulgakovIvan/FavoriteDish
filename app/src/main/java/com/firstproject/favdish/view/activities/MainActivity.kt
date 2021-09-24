@@ -1,9 +1,13 @@
 package com.firstproject.favdish.view.activities
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
@@ -11,10 +15,9 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.firstproject.favdish.R
 import com.firstproject.favdish.databinding.ActivityMainBinding
-import com.firstproject.favdish.view.fragments.AddUpdateFragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.firstproject.favdish.view.fragments.AllDishesFragmentDirections
 
-class MainActivity : AppCompatActivity(), AddUpdateFragment.ChangeActivity {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
@@ -27,8 +30,6 @@ class MainActivity : AppCompatActivity(), AddUpdateFragment.ChangeActivity {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
         navController = navHostFragment.navController
 
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_all_dishes, R.id.navigation_favorite_dishes,
@@ -39,17 +40,8 @@ class MainActivity : AppCompatActivity(), AddUpdateFragment.ChangeActivity {
         binding.navView.setupWithNavController(navController)
 
         binding.fab.setOnClickListener {
-            navController.navigate(R.id.navigation_addUpdate)
-        }
-    }
-
-    override fun hideMenu(isVisible: Boolean) {
-        if (isVisible) {
-            binding.navView.visibility = View.VISIBLE
-            binding.fab.visibility = View.VISIBLE
-        } else {
-            binding.navView.visibility = View.GONE
-            binding.fab.visibility = View.GONE
+            hideBottomNavigationView(
+                AllDishesFragmentDirections.actionNavigationAllDishesToNavigationAddUpdate())
         }
     }
 
@@ -57,14 +49,34 @@ class MainActivity : AppCompatActivity(), AddUpdateFragment.ChangeActivity {
         return NavigationUI.navigateUp(navController, null)
     }
 
-    // TODO: 23.09.2021 hide floating action button
-    fun hideBottomNavigationView() {
+    fun hideBottomNavigationView(directions: NavDirections) {
         binding.navView.clearAnimation()
-        binding.navView.animate().translationY(binding.navView.height.toFloat()).duration = 300
+        binding.fab.clearAnimation()
+
+        binding.fab.animate().alpha(0f).duration = 300
+
+        ObjectAnimator.ofFloat(binding.navView, "translationY",
+            binding.navView.height.toFloat()).apply {
+
+            duration = 300
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    binding.navView.visibility = View.GONE
+                    navController.navigate(directions)
+                }
+            })
+            start()
+        }
     }
 
     fun showBottomNavigationView() {
-        binding.navView.clearAnimation()
-        binding.navView.animate().translationY(0f).duration = 300
+        if (binding.navView.visibility == View.GONE) {
+            binding.navView.visibility = View.VISIBLE
+            binding.navView.clearAnimation()
+            binding.navView.animate().translationY(0f).duration = 300
+
+            binding.fab.clearAnimation()
+            binding.fab.animate().alpha(0.75f).duration = 300
+        }
     }
 }

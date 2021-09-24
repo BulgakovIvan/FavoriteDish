@@ -1,7 +1,6 @@
 package com.firstproject.favdish.view.fragments
 
 import android.app.Activity
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,9 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
 import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.firstproject.favdish.BR
@@ -31,13 +28,11 @@ import com.firstproject.favdish.viewmodels.AddUpdateViewModelFactory
 
 class AddUpdateFragment : Fragment(), LifecycleObserver {
 
-    private lateinit var binding: AddUpdateFragmentBinding
+    private lateinit var dataBinding: AddUpdateFragmentBinding
 
     private val addUpdateViewModel: AddUpdateViewModel by activityViewModels {
         AddUpdateViewModelFactory((requireActivity().application as FavDishApplication).repository)
     }
-
-    private var changeActivity: ChangeActivity? = null
 
     private val startCameraXApp = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -46,7 +41,7 @@ class AddUpdateFragment : Fragment(), LifecycleObserver {
                 addUpdateViewModel.setImagePath(path)
             }
 
-            binding.ivAddDishImage.setImageDrawable(
+            dataBinding.ivAddDishImage.setImageDrawable(
                 ContextCompat.getDrawable(requireActivity(), R.drawable.ic_vector_edit))
         }
     }
@@ -56,48 +51,27 @@ class AddUpdateFragment : Fragment(), LifecycleObserver {
             val path = saveImage(requireActivity(), it)
             addUpdateViewModel.setImagePath(path)
 
-            binding.ivAddDishImage.setImageDrawable(
+            dataBinding.ivAddDishImage.setImageDrawable(
                 ContextCompat.getDrawable(requireActivity(), R.drawable.ic_vector_edit))
         }
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        activity?.lifecycle?.addObserver(this)
-    }
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-    @Suppress("unused")
-    fun onCreatedActivity(){
-        activity?.lifecycle?.removeObserver(this)
-
-        changeActivity = context as ChangeActivity
-//        Log.e(TAG, "set context")
-
-        changeActivity?.hideMenu(false)
-//        Log.e(TAG, "hide menu")
-
-//        val fstate = lifecycle.currentState.name
-//        val state = activity?.lifecycle?.currentState?.name
-//        Log.e(TAG, "lifecycle fun on, state: $state - $fstate")
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(
+        dataBinding = DataBindingUtil.inflate(
             inflater, R.layout.add_update_fragment, container, false)
-        binding.lifecycleOwner = this
-        return binding.root
+        dataBinding.lifecycleOwner = this
+        return dataBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.setVariable(BR.myAddUpdateViewModel, addUpdateViewModel)
+        dataBinding.setVariable(BR.myAddUpdateViewModel, addUpdateViewModel)
 
-        binding.ivAddDishImage.setOnClickListener {
+        dataBinding.ivAddDishImage.setOnClickListener {
             customImageSelectionDialog(this,startCameraXApp, getContent)
         }
 
@@ -105,22 +79,22 @@ class AddUpdateFragment : Fragment(), LifecycleObserver {
             Glide.with(this)
                     .load(it)
                     .centerCrop()
-                    .into(binding.ivDishImage)
+                    .into(dataBinding.ivDishImage)
         }
 
         addUpdateViewModel.apply {
             type.observe(viewLifecycleOwner) {
-                binding.etType.setText(it)
+                dataBinding.etType.setText(it)
             }
             category.observe(viewLifecycleOwner) {
-                binding.etCategory.setText(it)
+                dataBinding.etCategory.setText(it)
             }
             cookingTime.observe(viewLifecycleOwner) {
-                binding.etCookingTime.setText(it)
+                dataBinding.etCookingTime.setText(it)
             }
         }
 
-        binding.etType.setOnClickListener {
+        dataBinding.etType.setOnClickListener {
             val dialogParams = DialogCustomListModel(
                 resources.getString(R.string.title_select_dish_type),
                 dishTypes(),
@@ -131,7 +105,7 @@ class AddUpdateFragment : Fragment(), LifecycleObserver {
                 .show(requireActivity().supportFragmentManager, "dialog_type")
         }
 
-        binding.etCategory.setOnClickListener {
+        dataBinding.etCategory.setOnClickListener {
             val dialogParams = DialogCustomListModel(
                 resources.getString(R.string.title_select_dish_category),
                 dishCategories(),
@@ -142,7 +116,7 @@ class AddUpdateFragment : Fragment(), LifecycleObserver {
                 .show(requireActivity().supportFragmentManager, "dialog_category")
         }
 
-        binding.etCookingTime.setOnClickListener {
+        dataBinding.etCookingTime.setOnClickListener {
             val dialogParams = DialogCustomListModel(
                 resources.getString(R.string.title_select_dish_cooking_time),
                 dishCookTime(),
@@ -153,15 +127,8 @@ class AddUpdateFragment : Fragment(), LifecycleObserver {
                 .show(requireActivity().supportFragmentManager, "dialog_cooking_time")
         }
 
-        binding.btnAddDish.setOnClickListener {
+        dataBinding.btnAddDish.setOnClickListener {
             addUpdateViewModel.trimValues()
-
-//            val title = binding.etTitle.text.toString().trim { it <= ' ' }
-//            val type = binding.etType.text.toString().trim { it <= ' ' }
-//            val category = binding.etCategory.text.toString().trim { it <= ' ' }
-//            val ingredients = binding.etIngredients.text.toString().trim { it <= ' ' }
-//            val cookingTimeInMinutes = binding.etCookingTime.text.toString().trim { it <= ' ' }
-//            val cookingDirection = binding.etDirectionToCook.text.toString().trim { it <= ' ' }
 
             when {
                 addUpdateViewModel.imagePath.value.isNullOrEmpty() -> {
@@ -188,9 +155,7 @@ class AddUpdateFragment : Fragment(), LifecycleObserver {
                 else -> {
                     makeToast("All the entries are valid.")
                     addUpdateViewModel.insert()
-                    changeActivity?.hideMenu(true)
 
-                    // TODO: 22.09.2021 navigation with popUP
                     requireActivity().findNavController(R.id.nav_host_fragment_activity_main)
                         .navigate(R.id.navigation_all_dishes)
                 }
@@ -202,18 +167,7 @@ class AddUpdateFragment : Fragment(), LifecycleObserver {
         Toast.makeText(requireActivity(), text, Toast.LENGTH_SHORT).show()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        changeActivity?.hideMenu(true)
-    }
-
-    interface ChangeActivity {
-        fun hideMenu(isVisible: Boolean)
-    }
-
     companion object {
-        @Suppress("unused")
-        fun newInstance() = AddUpdateFragment()
         const val IMAGE_URI = "IMAGE_URI"
     }
 }
