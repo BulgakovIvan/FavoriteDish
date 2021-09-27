@@ -1,9 +1,6 @@
 package com.firstproject.favdish.model.database
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import com.firstproject.favdish.model.entities.FavDish
 import kotlinx.coroutines.flow.Flow
 
@@ -21,4 +18,7 @@ interface FavDishDao {
 
     @Query("SELECT * FROM FAV_DISHES_TABLE WHERE favoriteDish = 1")
     fun getFavoriteDishesList() : Flow<List<FavDish>>
+
+    @Delete
+    suspend fun deleteFavDishDetails(favDish: FavDish)
 }

@@ -1,6 +1,5 @@
 package com.firstproject.favdish.view.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,7 +54,9 @@ class FavDishListAdapter(private val fragment: Fragment) : ListAdapter<FavDish, 
                     }
 
                 } else if (it.itemId == R.id.action_delete_dish) {
-                    Log.e("ups", "You have clicked off")
+                    if (fragment is AllDishesFragment) {
+                        fragment.deleteDish(current)
+                    }
                 }
                 true
             }

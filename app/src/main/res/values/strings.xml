@@ -41,4 +41,9 @@
 
     <string name="action_edit_dish">EDIT DISH</string>
     <string name="action_delete_dish">DELETE DISH</string>
+
+    <string name="title_delete_dish">Delete Dish</string>
+    <string name="msg_delete_dish_dialog">Are you sure you want to delete %1$s.</string>
+    <string name="lbl_yes">Yes</string>
+    <string name="lbl_no">No</string>
 </resources>
