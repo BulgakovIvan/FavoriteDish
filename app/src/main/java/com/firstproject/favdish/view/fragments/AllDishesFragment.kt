@@ -1,18 +1,23 @@
 package com.firstproject.favdish.view.fragments
 
 import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.firstproject.favdish.R
 import com.firstproject.favdish.application.FavDishApplication
+import com.firstproject.favdish.databinding.DialogCustomListBinding
 import com.firstproject.favdish.databinding.FragmentAllDishesBinding
 import com.firstproject.favdish.model.entities.FavDish
+import com.firstproject.favdish.utils.*
 import com.firstproject.favdish.view.activities.AddUpdateDishActivity
 import com.firstproject.favdish.view.activities.MainActivity
+import com.firstproject.favdish.view.adapters.CustomListItemAdapter
 import com.firstproject.favdish.view.adapters.FavDishListAdapter
 import com.firstproject.favdish.viewmodels.AllDishesViewModel
 import com.firstproject.favdish.viewmodels.AllDishesViewModelFactory
@@ -89,6 +94,10 @@ class AllDishesFragment : Fragment() {
                 startActivity(Intent(requireActivity(), AddUpdateDishActivity::class.java))
                 return true
             }
+            R.id.action_filter_dishes -> {
+                filterDishesListDialog()
+                return true
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -119,5 +128,27 @@ class AllDishesFragment : Fragment() {
         val alertDialog: AlertDialog = builder.create()
         alertDialog.setCancelable(false)
         alertDialog.show()
+    }
+
+    private fun filterDishesListDialog() {
+        val customListDialog = Dialog(requireActivity())
+
+        val binding: DialogCustomListBinding = DialogCustomListBinding.inflate(layoutInflater)
+        customListDialog.setContentView(binding.root)
+
+        binding.tvDialogTitle.text = resources.getString(R.string.title_select_item_to_filter)
+
+        val dishTypes = dishTypes()
+        dishTypes.add(0, ALL_ITEMS)
+
+        binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
+        val adapter = CustomListItemAdapter(
+            requireActivity(),
+            dishTypes,
+            FILTER_SELECTION
+        )
+
+        binding.rvList.adapter = adapter
+        customListDialog.show()
     }
 }
