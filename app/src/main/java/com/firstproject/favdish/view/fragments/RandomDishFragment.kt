@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.firstproject.favdish.databinding.FragmentRandomDishBinding
+import com.firstproject.favdish.view.activities.MainActivity
 import com.firstproject.favdish.viewmodels.RandomDishViewModel
 
 class RandomDishFragment : Fragment() {
@@ -33,6 +34,13 @@ class RandomDishFragment : Fragment() {
             textView.text = it
         })
         return root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (requireActivity() is MainActivity) {
+            (activity as MainActivity).showBottomNavigationView()
+        }
     }
 
     override fun onDestroyView() {

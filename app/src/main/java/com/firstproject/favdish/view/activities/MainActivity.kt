@@ -27,7 +27,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
         navController = navHostFragment.navController
 
         val appBarConfiguration = AppBarConfiguration(
@@ -40,8 +41,7 @@ class MainActivity : AppCompatActivity() {
         binding.navView.setupWithNavController(navController)
 
         binding.fab.setOnClickListener {
-            hideBottomNavigationView(
-                AllDishesFragmentDirections.actionNavigationAllDishesToNavigationAddUpdate())
+            hideBottomNavigationView(R.id.navigation_addUpdate)
         }
     }
 
@@ -50,6 +50,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun hideBottomNavigationView(directions: NavDirections) {
+        binding.navView.clearAnimation()
+        binding.fab.clearAnimation()
+
+        binding.fab.animate().alpha(0f).duration = 300
+
+        ObjectAnimator.ofFloat(binding.navView, "translationY",
+            binding.navView.height.toFloat()).apply {
+
+            duration = 300
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    binding.navView.visibility = View.GONE
+                    navController.navigate(directions)
+                }
+            })
+            start()
+        }
+    }
+
+    fun hideBottomNavigationView(directions: Int) {
         binding.navView.clearAnimation()
         binding.fab.clearAnimation()
 

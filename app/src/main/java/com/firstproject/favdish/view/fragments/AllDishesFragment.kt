@@ -95,7 +95,8 @@ class AllDishesFragment : Fragment() {
     fun dishDetails(favDish: FavDish) {
         if (requireActivity() is MainActivity) {
             (activity as MainActivity).hideBottomNavigationView(
-                AllDishesFragmentDirections.actionNavigationAllDishesToDishDetailsFragment(
+                AllDishesFragmentDirections
+                    .actionNavigationAllDishesToDishDetailsFragment(
                     favDish
                 )
             )
