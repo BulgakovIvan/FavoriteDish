@@ -24,6 +24,8 @@ class AddUpdateViewModel(private val repository: FavDishRepository) : ViewModel(
     var ingredients = MutableLiveData<String>()
     var instruction = MutableLiveData<String>()
 
+    private var id = 0
+
     fun setImagePath(path: String) {
         _imagePath.value = path
     }
@@ -66,6 +68,29 @@ class AddUpdateViewModel(private val repository: FavDishRepository) : ViewModel(
         cleanViewModel()
     }
 
+    fun update() {
+        if (id != 0) {
+            val favDishDetails = FavDish(
+                imagePath.value!!,
+                DISH_IMAGE_SOURCE_LOCAL,
+                title.value!!,
+                type.value!!,
+                category.value!!,
+                ingredients.value!!,
+                cookingTime.value!!,
+                instruction.value!!,
+                false,
+                id = id
+            )
+
+            viewModelScope.launch {
+                repository.updateFavDishData(favDishDetails)
+            }
+
+            cleanViewModel()
+        }
+    }
+
     private fun cleanViewModel() {
         setImagePath("")
         setType("")
@@ -75,6 +100,18 @@ class AddUpdateViewModel(private val repository: FavDishRepository) : ViewModel(
         title.value = ""
         ingredients.value = ""
         instruction.value = ""
+    }
+
+    fun loadDishDetails(dish: FavDish) {
+        setImagePath(dish.image)
+        setType(dish.type)
+        setCategory(dish.category)
+        setCookingTime(dish.cookingTime)
+
+        id = dish.id
+        title.value = dish.title
+        ingredients.value = dish.ingredients
+        instruction.value = dish.directionToCook
     }
 }
 

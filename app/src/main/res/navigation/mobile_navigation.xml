@@ -37,13 +37,23 @@
     <fragment
         android:id="@+id/navigation_addUpdate"
         android:name="com.firstproject.favdish.view.fragments.AddUpdateFragment"
-        android:label="Add dish"
+        android:label="{label}"
         tools:layout="@layout/add_update_fragment" >
         <action
             android:id="@+id/action_navigation_addUpdate_to_navigation_all_dishes"
             app:destination="@id/navigation_all_dishes"
+            app:launchSingleTop="true"
             app:popUpTo="@id/navigation_all_dishes"
             app:popUpToInclusive="false" />
+        <argument
+            android:name="dishDetails"
+            app:argType="com.firstproject.favdish.model.entities.FavDish"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="label"
+            app:argType="string"
+            android:defaultValue="Add dish" />
     </fragment>
 
     <fragment
