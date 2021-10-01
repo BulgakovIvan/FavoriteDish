@@ -68,6 +68,12 @@ class AddUpdateViewModel(private val repository: FavDishRepository) : ViewModel(
         cleanViewModel()
     }
 
+    fun insert(favDishDetails: FavDish) {
+        viewModelScope.launch {
+            repository.insertFavDishData(favDishDetails)
+        }
+    }
+
     fun update() {
         if (id != 0) {
             val favDishDetails = FavDish(

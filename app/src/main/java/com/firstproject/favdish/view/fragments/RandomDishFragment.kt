@@ -1,15 +1,24 @@
 package com.firstproject.favdish.view.fragments
 
 import android.os.Bundle
+import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.content.ContextCompat.getDrawable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.bumptech.glide.Glide
+import com.firstproject.favdish.R
+import com.firstproject.favdish.application.FavDishApplication
 import com.firstproject.favdish.databinding.FragmentRandomDishBinding
+import com.firstproject.favdish.model.entities.FavDish
+import com.firstproject.favdish.model.entities.RandomDish
+import com.firstproject.favdish.utils.DISH_IMAGE_SOURCE_ONLINE
 import com.firstproject.favdish.view.activities.MainActivity
-import com.firstproject.favdish.viewmodels.RandomDishViewModel
+import com.firstproject.favdish.viewmodels.*
 
 class RandomDishFragment : Fragment() {
 
@@ -50,6 +59,7 @@ class RandomDishFragment : Fragment() {
         randomDishViewModel.randomDishResponse.observe(viewLifecycleOwner){ response ->
             response.let {
                 Log.e("ups", it.recipes[0].title)
+                setRandomDishResponseInUI(response.recipes[0])
             }
         }
 
@@ -60,5 +70,75 @@ class RandomDishFragment : Fragment() {
         randomDishViewModel.loadRandomDish.observe(viewLifecycleOwner){
             Log.e("ups", "Random dish loading: $it")
         }
+    }
+
+    private fun setRandomDishResponseInUI(recipe: RandomDish.Recipe) {
+        Glide.with(requireActivity())
+            .load(recipe.image)
+            .centerCrop()
+            .into(binding.ivDishImage)
+
+        binding.tvTitle.text = recipe.title
+
+        var dishType = "other"
+        if (recipe.dishTypes.isNotEmpty()) {
+            dishType = recipe.dishTypes[0]
+            binding.tvType.text = dishType
+        }
+
+        binding.tvCategory.text = "other"
+
+        var ingredients = ""
+        for (value in recipe.extendedIngredients) {
+            ingredients = if (ingredients.isEmpty()) {
+                value.original
+            } else {
+                ingredients + ", \n" + value.original
+            }
+        }
+        binding.tvIngredients.text = ingredients
+
+        binding.tvCookingDirection.text = Html.fromHtml(
+            recipe.instructions,
+            Html.FROM_HTML_MODE_COMPACT
+        )
+
+        binding.tvCookingTime.text =
+            resources.getString(
+                R.string.lbl_estimate_cooking_time,
+                recipe.readyInMinutes.toString()
+            )
+
+        binding.ivFavoriteDish.setOnClickListener {
+
+            val randomDishDetails = FavDish(
+                recipe.image,
+                DISH_IMAGE_SOURCE_ONLINE,
+                recipe.title,
+                dishType,
+                "Other",
+                ingredients,
+                recipe.readyInMinutes.toString(),
+                recipe.instructions,
+                true
+            )
+
+            val addUpdateViewModel: AddUpdateViewModel by viewModels {
+                AddUpdateViewModelFactory((requireActivity().application as FavDishApplication).repository)
+            }
+            addUpdateViewModel.insert(randomDishDetails)
+
+            binding.ivFavoriteDish.setImageDrawable(
+                getDrawable(requireActivity(), R.drawable.ic_favorite_selected)
+            )
+
+            Toast.makeText(
+                requireActivity(),
+                resources.getString(R.string.msg_added_to_favorites),
+                Toast.LENGTH_SHORT
+            ).show()
+
+        }
+
     }
 }
