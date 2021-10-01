@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
+// TODO: 01.10.2021 delete
 class RandomDishViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
