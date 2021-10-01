@@ -8,7 +8,7 @@ import retrofit2.http.Query
 
 interface RandomDishAPI {
     @GET(API_ENDPOINT)
-    fun getDishes(
+    fun getRandomDishes(
         @Query(API_KEY) apiKey: String,
         @Query(LIMIT_LICENSE) limitLicense: Boolean,
         @Query(TAGS) tags: String,
