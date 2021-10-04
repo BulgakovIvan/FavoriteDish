@@ -24,7 +24,8 @@ class RandomDishViewModel : ViewModel() {
 
         compositeDisposable.add(
             randomRecipeApiService.getRandomDish()
-                .subscribeOn(Schedulers.newThread())
+//                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableSingleObserver<RandomDish.Recipes>(){
                     override fun onSuccess(value: RandomDish.Recipes) {
@@ -41,6 +42,11 @@ class RandomDishViewModel : ViewModel() {
 
                 })
         )
+    }
+
+    override fun onCleared() {
+        compositeDisposable.dispose()
+        super.onCleared()
     }
 
 }
