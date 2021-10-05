@@ -13,9 +13,11 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.work.*
 import com.firstproject.favdish.R
 import com.firstproject.favdish.databinding.ActivityMainBinding
-import com.firstproject.favdish.view.fragments.AllDishesFragmentDirections
+import com.firstproject.favdish.model.notification.NotifyWorker
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
@@ -43,6 +45,8 @@ class MainActivity : AppCompatActivity() {
         binding.fab.setOnClickListener {
             hideBottomNavigationView(R.id.navigation_addUpdate)
         }
+
+        startWork()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -98,5 +102,25 @@ class MainActivity : AppCompatActivity() {
             binding.fab.clearAnimation()
             binding.fab.animate().alpha(0.75f).duration = 300
         }
+    }
+
+    private fun createConstraints() = Constraints.Builder()
+        .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
+        .setRequiresCharging(false)
+        .setRequiresBatteryNotLow(true)
+        .build()
+
+    private fun createWorkRequest() =
+        PeriodicWorkRequestBuilder<NotifyWorker>(15, TimeUnit.MINUTES)
+            .setConstraints(createConstraints())
+            .build()
+
+    private fun startWork() {
+        WorkManager.getInstance(this)
+            .enqueueUniquePeriodicWork(
+                "FavDish Notify Work",
+                ExistingPeriodicWorkPolicy.KEEP,
+                createWorkRequest()
+            )
     }
 }
