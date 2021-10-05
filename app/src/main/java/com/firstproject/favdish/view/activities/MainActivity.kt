@@ -17,6 +17,7 @@ import androidx.work.*
 import com.firstproject.favdish.R
 import com.firstproject.favdish.databinding.ActivityMainBinding
 import com.firstproject.favdish.model.notification.NotifyWorker
+import com.firstproject.favdish.utils.NOTIFICATION_ID
 import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
@@ -44,6 +45,11 @@ class MainActivity : AppCompatActivity() {
 
         binding.fab.setOnClickListener {
             hideBottomNavigationView(R.id.navigation_addUpdate)
+        }
+
+        if (intent.hasExtra(NOTIFICATION_ID)) {
+            val notificaitonId = intent.getIntExtra(NOTIFICATION_ID, 0)
+            binding.navView.selectedItemId = R.id.navigation_random_dish
         }
 
         startWork()

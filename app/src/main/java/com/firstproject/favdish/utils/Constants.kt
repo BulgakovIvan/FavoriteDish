@@ -24,6 +24,10 @@ const val LIMIT_LICENSE_VALUE: Boolean = true
 const val TAGS_VALUE: String = "vegetarian, dessert"
 const val NUMBER_VALUE: Int = 1
 
+const val NOTIFICATION_ID = "FavDish_notification_id"
+const val NOTIFICATION_NAME = "FavDish"
+const val NOTIFICATION_CHANNEL = "FavDish_channel_01"
+
 enum class FieldType{
     DISH_TYPE,
     DISH_CATEGORY,
